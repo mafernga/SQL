@@ -1,0 +1,62 @@
+create database modificar
+use modificar
+
+create table producto(
+clave_prod int,
+nom_prod varchar(50),
+precio float,
+constraint pk_cp primary key (clave_prod)
+)
+insert into producto values(1,'Gorra', 5000)
+insert into producto values(2,'Camisa', 15000)
+insert into producto values(3,'Pantaloneta', 10000)
+
+create table cliente (
+clave_clie int,
+nom_clie varchar(50)
+constraint pk_cc primary key (clave_clie)
+)
+insert into cliente values(1,'Mario')
+insert into cliente values(2,'Santiago')
+insert into cliente values(3,'Mariana')
+
+
+create table produ_clie(
+folio int,
+cantidad int,
+clave_clie1 int,
+clave_prod1 int,
+subtotal float,
+constraint fk_fclie1 foreign key (clave_clie1) references cliente (clave_clie),
+constraint fk_fprod1 foreign key (clave_prod1) references producto(clave_prod)
+)
+
+insert into produ_clie values(1,2,1,1,null)
+insert into produ_clie values(2,4,2,2,null)
+insert into produ_clie values(3,6,3,3,null)
+
+
+select * from cliente
+select * from producto
+	
+
+-- AQUI SE VA A MODIFICAR EL NOMBRE QUE TENGA LA CLAVE 1
+update cliente 
+set nom_clie='Mayte'
+where clave_clie=1
+
+-- AQUI SE VA A MODIFICAR LA TABLA PRODU_CLIE PARA DARLE VALOR AL CAMPO SUBTOTAL
+update produ_clie
+set subtotal=cantidad*precio
+from produ_clie inner join producto on producto.clave_prod=produ_clie.clave_prod1
+
+select folio,clave_clie1, clave_prod1, nom_prod, cantidad, precio, subtotal 
+from  produ_clie inner join producto on producto.clave_prod=produ_clie.clave_prod1
+
+--ELIMINAR EL CLIENTE QUE TENGA LA CLAVE 1
+delete from cliente
+where clave_clie=1
+
+--ELIMINAR TABLA Y TODOS SUS REGISTROS, primero hay que eliminar la tabla que tenga llaves foraneas realcionadas con la tabala a eliminar
+drop table produ_clie
+drop table cliente
