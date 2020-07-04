@@ -1,0 +1,148 @@
+create database escuela
+use escuela
+
+create table materia(
+clave_m int,
+nom_m varchar(50),
+cred_m int,
+constraint pk_cm primary key (clave_m)
+)
+insert into materia values(1,'Programacion',20)
+insert into materia values(2,'Matematicas',10)
+insert into materia values(3,'Etica',5)
+
+create table carrera(
+clave_c int,
+nom_c varchar(50),
+dura_c int,
+constraint pk_cc primary key (clave_c)
+)
+insert into carrera values(1,'Ingenieria de Sistemas',5)
+insert into carrera values(2,'Psicologia',5)
+insert into carrera values(3,'Estadistica',5)
+insert into carrera values(4,'Etica',5)
+
+create table profesor(
+clave_p int,
+nom_p varchar(50),
+dir_p varchar(50),
+tel_p bigint,
+hor_p datetime,
+constraint pk_cp primary key (clave_p)
+)
+insert into profesor values(1,'Maria','Calle fake 234', 3002904916, '7:00')
+insert into profesor values(2,'Ruben Baena','Calle fake 234', 3002904916, '8:00')
+insert into profesor values(3,'Lina Tarazona','Calle fake 234', 3002901234, '10:00')
+
+
+create table alumno(
+id_alu int,
+nom_alu varchar(50),
+edad_alu int,
+sem_alu int,
+gen_alu varchar(50),
+clave_c1 int,
+constraint pk_calu primary key (id_alu),
+constraint fk_fc1 foreign key (clave_c1) references carrera(clave_c)
+)
+insert into alumno values(1,'Mario Andres',35, 8, 'MASCULINO', 1)
+insert into alumno values(2,'Maria Tereza',34, 7, 'FEMENINO', 2)
+insert into alumno values(3,'Santiago',30, 7, 'MASCULINO', 1)
+insert into alumno values(4,'Mariana',28, 6, 'FEMENINO', 3)
+
+
+create table alu_pro(
+id_alu1 int,
+clave_p1 int,
+constraint fk_falu1  foreign key (id_alu1) references alumno(id_alu),
+constraint fk_fp1 foreign key (clave_p1) references profesor(clave_p)
+)
+insert into alu_pro values(1,1)
+insert into alu_pro values(2,2)
+insert into alu_pro values(3,1)
+
+
+create table mat_alu(
+clave_m1 int,
+id_alu2 int,
+constraint fk_fm1  foreign key (clave_m1) references materia(clave_m),
+constraint fk_falu2 foreign key (id_alu2) references alumno(id_alu)
+)
+insert into mat_alu values(1,1)
+insert into mat_alu values(2,1)
+insert into mat_alu values(3,1)
+insert into mat_alu values(1,2)
+insert into mat_alu values(2,2)
+insert into mat_alu values(3,2)
+insert into mat_alu values(1,3)
+insert into mat_alu values(2,3)
+insert into mat_alu values(3,3)
+
+
+create table mat_pro(
+clave_m2 int,
+clave_p2 int,
+constraint fk_fm2  foreign key (clave_m2) references materia(clave_m),
+constraint fk_fp2 foreign key (clave_p2) references profesor(clave_p)
+)
+insert into mat_pro values(1,2)
+insert into mat_pro values(2,1)
+insert into mat_pro values(3,2)
+insert into mat_pro values(1,3)
+
+
+select * from alumno
+select * from materia
+select * from carrera
+select * from profesor
+select * from alu_pro
+select * from mat_pro
+select * from mat_alu
+
+delete from table
+
+-- CONSULTA ENTRE 2 TABLAS CONECTADAS POR LA CLAVE PRIMARIA Y CLAVE FORANEA
+select nom_alu, edad_alu, sem_alu, gen_alu, nom_c, nom_p, nom_m
+from alumno inner join carrera on alumno.clave_c1=carrera.clave_c
+inner join alu_pro on alu_pro.id_alu1=alumno.id_alu
+inner join profesor on profesor.clave_p=alu_pro.clave_p1
+inner join mat_alu on mat_alu.id_alu2=alumno.id_alu
+inner join materia on materia.clave_m=mat_alu.clave_m1
+where nom_alu='Mario Andres' or  nom_alu='Santiago'
+
+select nom_alu, edad_alu, sem_alu, gen_alu, nom_c, nom_p, nom_m
+from alumno inner join carrera on alumno.clave_c1=carrera.clave_c
+inner join alu_pro on alu_pro.id_alu1=alumno.id_alu
+inner join profesor on profesor.clave_p=alu_pro.clave_p1
+inner join mat_alu on mat_alu.id_alu2=alumno.id_alu
+inner join materia on materia.clave_m=mat_alu.clave_m1
+where edad_alu>= 30
+
+select * from alumno A
+join materia M
+on A.id_alu=M.clave_m
+
+select * from alumno A
+left join materia M
+on A.id_alu=M.clave_m
+
+select 
+A.nom_alu as 'Nombre del Alumno',
+isnull(M.nom_m, 'No tiene materias matriculadas' )as 'Nombre de Materia',
+C.nom_c as 'Nombre de Carrera'
+from alumno A
+left join materia M
+on A.id_alu=M.clave_m
+left join carrera C
+on A.clave_c1=C.clave_c
+
+select * from alumno A
+right join materia M
+on A.id_alu=M.clave_m
+
+select * from alumno A
+full outer join materia M
+on A.id_alu=M.clave_m
+
+select * from materia
+select * from alumno
