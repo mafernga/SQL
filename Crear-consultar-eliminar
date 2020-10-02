@@ -57,6 +57,9 @@ from  produ_clie inner join producto on producto.clave_prod=produ_clie.clave_pro
 delete from cliente
 where clave_clie=1
 
+--ELIMINAR la Columna58 de la tabla Hoja1$
+ALTER TABLE Hoja1$ DROP COLUMN Columna58
+
 --ELIMINAR TABLA Y TODOS SUS REGISTROS, primero hay que eliminar la tabla que tenga llaves foraneas realcionadas con la tabala a eliminar
 drop table produ_clie
 drop table cliente
